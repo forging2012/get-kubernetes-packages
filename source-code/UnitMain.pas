@@ -165,7 +165,7 @@ var
   Response, gitlab_ci_str: String;
   str_position, i: integer;
 begin
-  // ´´½¨GitlabÏîÄ¿
+  // åˆ›å»ºGitlabé¡¹ç›®
   ProjectCreated := False;
   FormMain.RESTClientGitlab.BaseURL := 'https://gitlab.com/api/v3/projects?private_token=' + api_token_key;
   FormMain.RESTRequestGitlab.Method := rmPOST;
@@ -177,7 +177,7 @@ begin
     FormMain.RESTRequestGitlab.Execute;
     LJSON := TJSONObject.ParseJSONValue(FormMain.RESTResponseGitlab.Content);
     if LJSON = nil then
-      raise Exception.Create('ÎŞĞ§µÄJSON·µ»Ø! Çë¼ì²éÌá½»µÄÄÚÈİÊÇ·ñÕıÈ·²¢È·±£ÍøÂçÁ¬½ÓÕı³£');
+      raise Exception.Create('æ— æ•ˆçš„JSONè¿”å›! è¯·æ£€æŸ¥æäº¤çš„å†…å®¹æ˜¯å¦æ­£ç¡®å¹¶ç¡®ä¿ç½‘ç»œè¿æ¥æ­£å¸¸');
     FormMain.MemoLog.Lines.Add('Project Information:');
     FormMain.MemoLog.Lines.Add('');
     FormMain.MemoLog.Lines.Add(FormMain.RESTResponseGitlab.Content);
@@ -195,9 +195,9 @@ begin
           project_id := project_id + FormMain.RESTResponseGitlab.Content[i];
       if project_id <> '' then
       begin
-        FormMain.LabelWaitting.Text := '´´½¨¾µÏñÖÆ×÷ÈÎÎñ...';
+        FormMain.LabelWaitting.Text := 'åˆ›å»ºé•œåƒåˆ¶ä½œä»»åŠ¡...';
 
-        // ´´½¨DockerfileÎÄ¼şÄÚÈİ
+        // åˆ›å»ºDockerfileæ–‡ä»¶å†…å®¹
         gitlab_ci_str_list := TStringList.Create;
         gitlab_ci_str := 'content=';
         gitlab_ci_str := gitlab_ci_str + FormMain.LabelOS.Text + FormMain.EditOS.Text + chr(10);
@@ -230,7 +230,7 @@ begin
         FormMain.MemoLog.Lines.Add(Response);
         FormMain.MemoLog.Lines.Add('');
 
-        // ´´½¨kubernetes.listÎÄ¼şÄÚÈİ»òkubernetes.repoÎÄ¼şÄÚÈİ
+        // åˆ›å»ºkubernetes.listæ–‡ä»¶å†…å®¹æˆ–kubernetes.repoæ–‡ä»¶å†…å®¹
         gitlab_ci_str := 'content=';
         if FormMain.ComboBoxOSType.ItemIndex = 0 then
         begin
@@ -259,7 +259,7 @@ begin
           FormMain.MemoLog.Lines.Add('');
         end;
 
-        // ´´½¨gitlab-ciÁ÷Ë®ÏßÎÄ¼şÄÚÈİ
+        // åˆ›å»ºgitlab-ciæµæ°´çº¿æ–‡ä»¶å†…å®¹
         gitlab_ci_str_list := TStringList.Create;
         gitlab_ci_str := 'content=';
         gitlab_ci_str := gitlab_ci_str + 'build_image:' + chr(10);
@@ -269,7 +269,7 @@ begin
         gitlab_ci_str := gitlab_ci_str + '    script:' + chr(10);
         gitlab_ci_str := gitlab_ci_str + '        - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com' + chr(10);
 
-        // ¼ÓÈë¶àĞĞdocker pullÃüÁî»ñÈ¡¾µÏñÁĞ±í
+        // åŠ å…¥å¤šè¡Œdocker pullå‘½ä»¤è·å–é•œåƒåˆ—è¡¨
         if FormMain.MemoImageList.Lines.Count <> 0 then
           for i := 1 to FormMain.MemoImageList.Lines.Count do
             gitlab_ci_str := gitlab_ci_str + '        - docker pull ' + FormMain.MemoImageList.Lines[i - 1] + chr(10);
@@ -304,22 +304,22 @@ begin
         gitlab_ci_str_list.Clear;
         gitlab_ci_str_list.Add(gitlab_ci_str);
 
-        // ÔÚGitÏîÄ¿Àï´´½¨ĞÂÎÄ¼ş.gitlab-ci.yaml
+        // åœ¨Gité¡¹ç›®é‡Œåˆ›å»ºæ–°æ–‡ä»¶.gitlab-ci.yaml
         Application.ProcessMessages;
         Response := FormMain.IdHTTPGitlab.Post('https://gitlab.com/api/v4/projects/' + project_id + '/repository/files/.gitlab-ci.yml?branch=master&commit_message=Create%20.gitlab-ci.yml', gitlab_ci_str_list);
         FormMain.MemoLog.Lines.Add(Response);
         FormMain.MemoLog.Lines.Add('');
         gitlab_ci_str_list.Free;
       end;
-      FormMain.LabelWaitting.Text := '³É¹¦´´½¨¾µÏñÖÆ×÷ÈÎÎñ£¡';
+      FormMain.LabelWaitting.Text := 'æˆåŠŸåˆ›å»ºé•œåƒåˆ¶ä½œä»»åŠ¡ï¼';
       ProjectCreated := True;
     end;
   except
     on E: Exception do
     begin
       ProjectCreated := False;
-      FormMain.LabelWaitting.Text := '´´½¨ÈÎÎñÒì³££¬ÇëÖØÊÔ£¡';
-      ShowMessageOnMultiDevice('´´½¨Á÷Ë®ÏßÈÎÎñÓöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
+      FormMain.LabelWaitting.Text := 'åˆ›å»ºä»»åŠ¡å¼‚å¸¸ï¼Œè¯·é‡è¯•ï¼';
+      ShowMessageOnMultiDevice('åˆ›å»ºæµæ°´çº¿ä»»åŠ¡é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
     end;
   end;
 end;
@@ -346,22 +346,22 @@ begin
             job_id := job_id + Response[i];
         if job_id <> '' then
         begin
-          FormMain.MemoLog.Lines.Add('ÕÒµ½Á÷Ë®ÏßID£º' + job_id);
+          FormMain.MemoLog.Lines.Add('æ‰¾åˆ°æµæ°´çº¿IDï¼š' + job_id);
           FormMain.MemoLog.Lines.Add('');
           FoundJobID := True;
         end
         else
         begin
-          FormMain.MemoLog.Lines.Add('Òì³££ºÎ´ÕÒµ½Á÷Ë®ÏßID£¡');
+          FormMain.MemoLog.Lines.Add('å¼‚å¸¸ï¼šæœªæ‰¾åˆ°æµæ°´çº¿IDï¼');
           FormMain.MemoLog.Lines.Add('');
-          FormMain.LabelWaitting.Text := '³ÌĞòÒì³££ºÇëÖØĞÂ´´½¨¹¹½¨ÈÎÎñ¡£'
+          FormMain.LabelWaitting.Text := 'ç¨‹åºå¼‚å¸¸ï¼šè¯·é‡æ–°åˆ›å»ºæ„å»ºä»»åŠ¡ã€‚'
         end;
       end
       else
       begin
-        FormMain.MemoLog.Lines.Add('Òì³££ºÎ´ÕÒµ½Á÷Ë®ÏßID£¡');
+        FormMain.MemoLog.Lines.Add('å¼‚å¸¸ï¼šæœªæ‰¾åˆ°æµæ°´çº¿IDï¼');
         FormMain.MemoLog.Lines.Add('');
-        FormMain.LabelWaitting.Text := '³ÌĞòÒì³££ºÇëÖØĞÂ´´½¨¹¹½¨ÈÎÎñ¡£'
+        FormMain.LabelWaitting.Text := 'ç¨‹åºå¼‚å¸¸ï¼šè¯·é‡æ–°åˆ›å»ºæ„å»ºä»»åŠ¡ã€‚'
       end;
     end
     else
@@ -372,8 +372,8 @@ begin
   except
     on E: Exception do
     begin
-      ShowMessageOnMultiDevice('²éÑ¯Á÷Ë®ÏßºÅÓöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
-      FormMain.LabelWaitting.Text := '²éÑ¯Á÷Ë®ÏßºÅÓöµ½´íÎó';
+      ShowMessageOnMultiDevice('æŸ¥è¯¢æµæ°´çº¿å·é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
+      FormMain.LabelWaitting.Text := 'æŸ¥è¯¢æµæ°´çº¿å·é‡åˆ°é”™è¯¯';
     end;
   end;
 end;
@@ -401,7 +401,7 @@ begin
         if jobstatus = 'failed' then
         begin
           FormMain.TimerCheck.Enabled := False;
-          FormMain.LabelWaitting.Text := 'ÈÎÎñÖ´ĞĞÊ§°Ü£¬Çë²éÔÄÏêÏ¸ÈÕÖ¾£¡';
+          FormMain.LabelWaitting.Text := 'ä»»åŠ¡æ‰§è¡Œå¤±è´¥ï¼Œè¯·æŸ¥é˜…è¯¦ç»†æ—¥å¿—ï¼';
           try
             Response := FormMain.IdHTTPGitlab.Get('https://gitlab.com/api/v4/projects/' + project_id + '/jobs/' + job_id + '/trace');
             if Length(Response) > 0 then
@@ -410,12 +410,12 @@ begin
               FormMain.MemoLog.Lines.Add(Response);
             end
             else
-              FormMain.MemoLog.Lines.Add('»ñÈ¡ÔËĞĞÈÕÖ¾Ê§°Ü£¡');
+              FormMain.MemoLog.Lines.Add('è·å–è¿è¡Œæ—¥å¿—å¤±è´¥ï¼');
           except
             on E: Exception do
             begin
-              ShowMessageOnMultiDevice('»ñÈ¡Á÷Ë®ÏßÈÕÖ¾Óöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
-              FormMain.LabelWaitting.Text := '»ñÈ¡Á÷Ë®ÏßÈÕÖ¾Óöµ½´íÎó';
+              ShowMessageOnMultiDevice('è·å–æµæ°´çº¿æ—¥å¿—é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
+              FormMain.LabelWaitting.Text := 'è·å–æµæ°´çº¿æ—¥å¿—é‡åˆ°é”™è¯¯';
             end;
           end;
         end
@@ -450,65 +450,65 @@ begin
                   historystrlist.SaveToFile(GetHomePath + '/History.txt', TEncoding.ANSI);
                   historystrlist.Free;
                   FormMain.MemoHistory.Lines.Insert(0, '');
-                  FormMain.MemoHistory.Lines.Insert(0, 'ÒÔÏÂÊÇÀúÊ·¼ÇÂ¼£¬ÏÂÔØÁ´½ÓÓĞĞ§ÆÚ14Ìì£¬¾µÏñ³¤ÆÚÓĞĞ§£º');
+                  FormMain.MemoHistory.Lines.Insert(0, 'ä»¥ä¸‹æ˜¯å†å²è®°å½•ï¼Œä¸‹è½½é“¾æ¥æœ‰æ•ˆæœŸ14å¤©ï¼Œé•œåƒé•¿æœŸæœ‰æ•ˆï¼š');
                   FormMain.MemoHistory.Lines.Insert(0, '');
                   FormMain.MemoHistory.Lines.Insert(0, '');
-                  FormMain.MemoHistory.Lines.Insert(0, '   ·Ö±ğÊ¹ÓÃrpm -ivh *.rpm»òdpkg -i *.deb½øĞĞ°²×°');
-                  FormMain.MemoHistory.Lines.Insert(0, '   ½âÑ¹¿ªtar.gzºó×ºµÄÎÄ¼ş¼´¿ÉµÃµ½CentOSµÄRPM°ü»òUbuntuÏÂµÄdeb°ü');
-                  FormMain.MemoHistory.Lines.Insert(0, '   Ê¹ÓÃÃüÁî docker load -i kubernetes-images.tar.bz2 ¼´¿Éµ¼ÈëÈ«²¿¾µÏñ');
-                  FormMain.MemoHistory.Lines.Insert(0, '   kubernetes-debs.tar.gz »ò kubernetes-rpms.tar.gz');
-                  FormMain.MemoHistory.Lines.Insert(0, '   µÃµ½Á½¸öÎÄ¼ş£¬·Ö±ğÊÇ¾µÏñÎÄ¼şkubernetes-images.tar.bz2ÒÔ¼°OSÒÀÀµ°üÎÄ¼ş£º');
+                  FormMain.MemoHistory.Lines.Insert(0, '   åˆ†åˆ«ä½¿ç”¨rpm -ivh *.rpmæˆ–dpkg -i *.debè¿›è¡Œå®‰è£…');
+                  FormMain.MemoHistory.Lines.Insert(0, '   è§£å‹å¼€tar.gzåç¼€çš„æ–‡ä»¶å³å¯å¾—åˆ°CentOSçš„RPMåŒ…æˆ–Ubuntuä¸‹çš„debåŒ…');
+                  FormMain.MemoHistory.Lines.Insert(0, '   ä½¿ç”¨å‘½ä»¤ docker load -i kubernetes-images.tar.bz2 å³å¯å¯¼å…¥å…¨éƒ¨é•œåƒ');
+                  FormMain.MemoHistory.Lines.Insert(0, '   kubernetes-debs.tar.gz æˆ– kubernetes-rpms.tar.gz');
+                  FormMain.MemoHistory.Lines.Insert(0, '   å¾—åˆ°ä¸¤ä¸ªæ–‡ä»¶ï¼Œåˆ†åˆ«æ˜¯é•œåƒæ–‡ä»¶kubernetes-images.tar.bz2ä»¥åŠOSä¾èµ–åŒ…æ–‡ä»¶ï¼š');
                   FormMain.MemoHistory.Lines.Insert(0, '');
                   FormMain.MemoHistory.Lines.Insert(0, '   tar zxvf kubernetes-packages.tar.gz');
                   FormMain.MemoHistory.Lines.Insert(0, '   docker cp wise2c-get-k8s:/kubernetes-packages.tar.gz ./');
                   FormMain.MemoHistory.Lines.Insert(0, '     registry.gitlab.com/' + FormMain.EditUsername.Text + '/wise2c-get-k8s-' + datestring);
                   FormMain.MemoHistory.Lines.Insert(0, '   docker run -itd --name=wise2c-get-k8s --entrypoint=/bin/bash \');
                   FormMain.MemoHistory.Lines.Insert(0, '   docker pull registry.gitlab.com/' + FormMain.EditUsername.Text + '/wise2c-get-k8s-' + datestring);
-                  FormMain.MemoHistory.Lines.Insert(0, '   ×¢ÒâÕâÀïµÄ********ÎªÄãGitlabÕ¾µãÓÃ»§µÇÂ¼ÃÜÂë');
+                  FormMain.MemoHistory.Lines.Insert(0, '   æ³¨æ„è¿™é‡Œçš„********ä¸ºä½ Gitlabç«™ç‚¹ç”¨æˆ·ç™»å½•å¯†ç ');
                   FormMain.MemoHistory.Lines.Insert(0, '   docker login registry.gitlab.com -u="' + FormMain.EditUsername.Text + '" -p="********"');
-                  FormMain.MemoHistory.Lines.Insert(0, '2. ÔÚDocker»·¾³ÊäÈëÒÔÏÂÃüÁî£º');
+                  FormMain.MemoHistory.Lines.Insert(0, '2. åœ¨Dockerç¯å¢ƒè¾“å…¥ä»¥ä¸‹å‘½ä»¤ï¼š');
                   FormMain.MemoHistory.Lines.Insert(0, '');
                   FormMain.MemoHistory.Lines.Insert(0, '   https://transfer.sh/' + downloadstr + '/kubernetes-packages.tar.gz');
-                  FormMain.MemoHistory.Lines.Insert(0, '1. Ö±½ÓÊ¹ÓÃä¯ÀÀÆ÷»òÑ¸À×Ö®ÀàµÄ¹¤¾ßÏÂÔØÎÄ¼ş£º');
-                  FormMain.MemoHistory.Lines.Insert(0, 'Äú¿ÉÒÔÑ¡ÔñÁ½ÖÖ·½Ê½»ñµÃÈí¼ş°ü£º');
+                  FormMain.MemoHistory.Lines.Insert(0, '1. ç›´æ¥ä½¿ç”¨æµè§ˆå™¨æˆ–è¿…é›·ä¹‹ç±»çš„å·¥å…·ä¸‹è½½æ–‡ä»¶ï¼š');
+                  FormMain.MemoHistory.Lines.Insert(0, 'æ‚¨å¯ä»¥é€‰æ‹©ä¸¤ç§æ–¹å¼è·å¾—è½¯ä»¶åŒ…ï¼š');
                   FormMain.WebBrowserHistory.URL := 'file://' + GetHomePath + '/cicd.png';
                 end
                 else
                 begin
-                  FormMain.MemoLog.Lines.Add('ÈÎÎñÍê³É£¬µ«»ñÈ¡ÏÂÔØÁ´½ÓÊ§°Ü£¡ÇëÖØĞÂÔËĞĞ³ÌĞò¡£');
-                  FormMain.LabelWaitting.Text := '»ñÈ¡ÏÂÔØÁ´½ÓÊ§°Ü£¡';
+                  FormMain.MemoLog.Lines.Add('ä»»åŠ¡å®Œæˆï¼Œä½†è·å–ä¸‹è½½é“¾æ¥å¤±è´¥ï¼è¯·é‡æ–°è¿è¡Œç¨‹åºã€‚');
+                  FormMain.LabelWaitting.Text := 'è·å–ä¸‹è½½é“¾æ¥å¤±è´¥ï¼';
                 end;
               end
               else
               begin
-                FormMain.MemoLog.Lines.Add('ÈÎÎñÍê³É£¬µ«»ñÈ¡ÏÂÔØÁ´½ÓÊ§°Ü£¡£¬ÇëÖØĞÂÔËĞĞ³ÌĞò');
-                FormMain.LabelWaitting.Text := '»ñÈ¡ÏÂÔØÁ´½ÓÊ§°Ü£¡';
+                FormMain.MemoLog.Lines.Add('ä»»åŠ¡å®Œæˆï¼Œä½†è·å–ä¸‹è½½é“¾æ¥å¤±è´¥ï¼ï¼Œè¯·é‡æ–°è¿è¡Œç¨‹åº');
+                FormMain.LabelWaitting.Text := 'è·å–ä¸‹è½½é“¾æ¥å¤±è´¥ï¼';
               end;
             end
             else
             begin
-              FormMain.MemoLog.Lines.Add('ÈÎÎñÍê³É£¬µ«»ñÈ¡ÔËĞĞÈÕÖ¾Ê§°Ü£¡');
-              FormMain.LabelWaitting.Text := '»ñÈ¡ÔËĞĞÈÕÖ¾Ê§°Ü£¡';
+              FormMain.MemoLog.Lines.Add('ä»»åŠ¡å®Œæˆï¼Œä½†è·å–è¿è¡Œæ—¥å¿—å¤±è´¥ï¼');
+              FormMain.LabelWaitting.Text := 'è·å–è¿è¡Œæ—¥å¿—å¤±è´¥ï¼';
             end;
           except
             on E: Exception do
             begin
-              ShowMessageOnMultiDevice('»ñÈ¡Á÷Ë®ÏßÈÕÖ¾Óöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
-              FormMain.LabelWaitting.Text := '»ñÈ¡Á÷Ë®ÏßÈÕÖ¾Óöµ½´íÎó';
+              ShowMessageOnMultiDevice('è·å–æµæ°´çº¿æ—¥å¿—é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
+              FormMain.LabelWaitting.Text := 'è·å–æµæ°´çº¿æ—¥å¿—é‡åˆ°é”™è¯¯';
             end;
           end;
         end
         else
         begin
           FormMain.TimerCheck.Enabled := True;
-          FormMain.LabelWaitting.Text := '¾µÏñÖÆ×÷ÖĞ£¬ÇëÄÍĞÄµÈºò...';
+          FormMain.LabelWaitting.Text := 'é•œåƒåˆ¶ä½œä¸­ï¼Œè¯·è€å¿ƒç­‰å€™...';
           FormMain.MemoLog.Text := FormMain.MemoLog.Text + ('>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
         end;
       end
       else
       begin
         FormMain.TimerCheck.Enabled := True;
-        FormMain.LabelWaitting.Text := '¼ì²éÈÎÎñ×´Ì¬Ê§°Ü...';
+        FormMain.LabelWaitting.Text := 'æ£€æŸ¥ä»»åŠ¡çŠ¶æ€å¤±è´¥...';
         FormMain.MemoLog.Lines.Add(Response);
         FormMain.MemoLog.Lines.Add('');
       end;
@@ -521,8 +521,8 @@ begin
   except
     on E: Exception do
     begin
-      ShowMessageOnMultiDevice('»ñÈ¡Á÷Ë®ÏßÈÎÎñÁĞ±íÓöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
-      FormMain.LabelWaitting.Text := '»ñÈ¡Á÷Ë®ÏßÁĞ±íÊ§°Ü';
+      ShowMessageOnMultiDevice('è·å–æµæ°´çº¿ä»»åŠ¡åˆ—è¡¨é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
+      FormMain.LabelWaitting.Text := 'è·å–æµæ°´çº¿åˆ—è¡¨å¤±è´¥';
     end;
   end;
 end;
@@ -536,7 +536,7 @@ Var
 begin
   Started := True;
   LabelWaitting.Visible := True;
-  LabelWaitting.Text := 'ÕıÔÚµÇÂ½Gitlab£¬ÇëÉÔºò...';
+  LabelWaitting.Text := 'æ­£åœ¨ç™»é™†Gitlabï¼Œè¯·ç¨å€™...';
   TabControlMain.GotoVisibleTab(1);
   WebBrowserGIF.URL := 'file://' + GetHomePath + '/waitting.gif';
   Application.ProcessMessages;
@@ -545,10 +545,10 @@ begin
   MemoLog.Lines.Add('Connecting to Gitlab...');
   MemoLog.Lines.Add('');
   ButtonStart.Enabled := False;
-  // Õû¸öµ÷ÓÃ¹ı³ÌÓÉIdHTTP×Ô¶¯´¦Àícookie£¬ĞèÒª¶ÔIdHTTP¿Ø¼şµÄÊôĞÔ½øĞĞ¶ÔÏó°ó¶¨£¬
-  // ¼´IdHTTPGitlabdµÄCookieManagerÎªIdCookieManagerGitlab;
+  // æ•´ä¸ªè°ƒç”¨è¿‡ç¨‹ç”±IdHTTPè‡ªåŠ¨å¤„ç†cookieï¼Œéœ€è¦å¯¹IdHTTPæ§ä»¶çš„å±æ€§è¿›è¡Œå¯¹è±¡ç»‘å®šï¼Œ
+  // å³IdHTTPGitlabdçš„CookieManagerä¸ºIdCookieManagerGitlab;
 
-  // ·ÃÎÊSign inÒ³Ãæ»ñÈ¡Æäauthenticity_token
+  // è®¿é—®Sign iné¡µé¢è·å–å…¶authenticity_token
   token := '';
   Response := '';
   // cookie := '';
@@ -577,7 +577,7 @@ begin
           MemoLog.Lines.Add(token);
           MemoLog.Lines.Add('');
 
-          // Ê¹ÓÃÓÃ»§ÃûÃÜÂëµÇÂ¼Gitlab
+          // ä½¿ç”¨ç”¨æˆ·åå¯†ç ç™»å½•Gitlab
           postbody := TStringList.Create;
           postbody.Add('user[login]=' + EditUsername.Text);
           postbody.Add('user[password]=' + EditPassword.Text);
@@ -596,13 +596,13 @@ begin
             begin
               if pos('Invalid Login or password.', Response) > 0 then
               begin
-                LabelWaitting.Text := 'µÇÂ¼ÓÃ»§Ãû»òÃÜÂë´íÎó£¡';
+                LabelWaitting.Text := 'ç™»å½•ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼';
                 MemoLog.Lines.Add('Invalid Login or password.');
                 MemoLog.Lines.Add('');
               end
-              else if pos('<title>Projects ¡¤ Dashboard ¡¤ GitLab</title>', Response) > 0 then
+              else if pos('<title>Projects Â· Dashboard Â· GitLab</title>', Response) > 0 then
               begin
-                LabelWaitting.Text := '        µÇÂ¼³É¹¦£¡';
+                LabelWaitting.Text := '        ç™»å½•æˆåŠŸï¼';
                 configstrlist := TStringList.Create;
                 configstrlist.Clear;
                 configstrlist.Add(EditUsername.Text);
@@ -610,7 +610,7 @@ begin
                 configstrlist.Free;
                 MemoLog.Lines.Add('You are signed in!');
                 MemoLog.Lines.Add('');
-                // ·ÃÎÊPersonal Access TokenÒ³Ãæ»ñÈ¡Æäauthenticity_token
+                // è®¿é—®Personal Access Tokené¡µé¢è·å–å…¶authenticity_token
                 try
                   token := '';
                   Application.ProcessMessages;
@@ -629,7 +629,7 @@ begin
                       MemoLog.Lines.Add('');
                       MemoLog.Lines.Add(token);
                       MemoLog.Lines.Add('');
-                      // ´´½¨¸öÈËAPIÁîÅÆ
+                      // åˆ›å»ºä¸ªäººAPIä»¤ç‰Œ
 
                       monthstr := IntToStr(MonthOf(now));
                       if Length(monthstr) = 1 then
@@ -660,7 +660,7 @@ begin
                         Response := '';
                         Application.ProcessMessages;
                         Response := IdHTTPGitlab.Post('https://gitlab.com/profile/personal_access_tokens', postbody);
-                        // ±£´æAPIÁîÅÆID¼°KeyÖµ
+                        // ä¿å­˜APIä»¤ç‰ŒIDåŠKeyå€¼
                         if (Length(Response) > 0) then
                         begin
                           if pos('created-personal-access-token', Response) > 0 then
@@ -672,7 +672,7 @@ begin
                               else
                                 api_token_id := api_token_id + Response[i];
 
-                            // ÅĞ¶ÏÊÇ·ñ´æÔÚAPI Token ID
+                            // åˆ¤æ–­æ˜¯å¦å­˜åœ¨API Token ID
                             if api_token_id <> '' then
                             begin
                               MemoLog.Lines.Add('Personal Access Token ID:');
@@ -697,7 +697,7 @@ begin
                               else
                                 api_token_key := api_token_key + Response[i];
 
-                            // ÅĞ¶ÏÊÇ·ñ´æÔÚAPI Token Key
+                            // åˆ¤æ–­æ˜¯å¦å­˜åœ¨API Token Key
                             if api_token_key <> '' then
                             begin
                               MemoLog.Lines.Add('Personal Access Token Key:');
@@ -713,19 +713,17 @@ begin
                               MemoLog.Lines.Add('');
                             end;
 
-                            // ºóĞøĞèÒª¶ÔÁîÅÆ×ÊÔ´½øĞĞÉ¾³ı£¬´úÂë»òº¯Êı¹ı³Ì¿ÉÒÔ·ÅÔÚÕâÀï
-
-                            // ´´½¨GitlabÏîÄ¿
+                            // åˆ›å»ºGitlabé¡¹ç›®
                             CreateGitProject;
 
-                            // »ñÈ¡Á÷Ë®ÏßJobID
+                            // è·å–æµæ°´çº¿JobID
                             if ProjectCreated then
                             begin
                               GetJobID;
                               MemoLog.Lines.Add('JobID: ' + job_id);
                               MemoLog.Lines.Add('');
                             end;
-                            // ÂÖÑ¯ÈÎÎñÖ´ĞĞ½á¹û
+                            // è½®è¯¢ä»»åŠ¡æ‰§è¡Œç»“æœ
                             if FoundJobID then
                             begin
                               MemoLog.Lines.Clear;
@@ -734,7 +732,7 @@ begin
                               CheckJobStatus;
                             end;
 
-                            // ÊÍ·Åpostbody×ÊÔ´¼°Cookie»º´æ
+                            // é‡Šæ”¾postbodyèµ„æºåŠCookieç¼“å­˜
                             postbody.Free;
                             IdHTTPGitlab.CookieManager.CookieCollection.Clear;
                           end
@@ -753,7 +751,7 @@ begin
                         end;
                       except
                         on E: Exception do
-                          ShowMessageOnMultiDevice('´´½¨APIÁîÅÆÓöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
+                          ShowMessageOnMultiDevice('åˆ›å»ºAPIä»¤ç‰Œé‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
                       end;
                     end
                     else
@@ -771,12 +769,12 @@ begin
                   end;
                 except
                   on E: Exception do
-                    ShowMessageOnMultiDevice('·ÃÎÊAccess TokensÒ³ÃæÓöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
+                    ShowMessageOnMultiDevice('è®¿é—®Access Tokensé¡µé¢é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
                 end;
               end
               else
               begin
-                LabelWaitting.Text := 'µÇÂ¼Ê§°Ü£¬ÇëºË¶ÔµÇÂ¼ĞÅÏ¢£¡';
+                LabelWaitting.Text := 'ç™»å½•å¤±è´¥ï¼Œè¯·æ ¸å¯¹ç™»å½•ä¿¡æ¯ï¼';
                 MemoLog.Lines.Add('You ar not signed in, please see http response as below:');
                 MemoLog.Lines.Add('');
                 MemoLog.Lines.Add(Response);
@@ -790,7 +788,7 @@ begin
             end;
           except
             on E: Exception do
-              ShowMessageOnMultiDevice('µÇÂ¼GitlabÓöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
+              ShowMessageOnMultiDevice('ç™»å½•Gitlabé‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
           end;
         end
         else
@@ -811,7 +809,7 @@ begin
     end;
   except
     on E: Exception do
-      ShowMessageOnMultiDevice('·ÃÎÊGitlabµÇÂ¼Ò³ÃæÓöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
+      ShowMessageOnMultiDevice('è®¿é—®Gitlabç™»å½•é¡µé¢é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
   end;
   ButtonStart.Enabled := True;
 end;
@@ -838,10 +836,10 @@ begin
       TempMemo.Free;
     end
     else
-      ShowMessageOnMultiDevice('Kubernetes°æ±¾ĞÅÏ¢·µ»ØÎª¿Õ£¬Çë¼ì²é¾ßÌåÔ­Òò');
+      ShowMessageOnMultiDevice('Kubernetesç‰ˆæœ¬ä¿¡æ¯è¿”å›ä¸ºç©ºï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ');
   except
     on E: Exception do
-      ShowMessageOnMultiDevice('»ñÈ¡Kubernetes°æ±¾ĞÅÏ¢Óöµ½´íÎó£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
+      ShowMessageOnMultiDevice('è·å–Kubernetesç‰ˆæœ¬ä¿¡æ¯é‡åˆ°é”™è¯¯ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
   end;
   ButtonVersionSync.Enabled := True;
 end;
@@ -866,10 +864,10 @@ begin
       EditFlannel.Text := LeftStr(flannelversion, Length(flannelversion) - 6);
     end
     else
-      ShowMessageOnMultiDevice('Kubernetes°æ±¾ĞÅÏ¢·µ»ØÎª¿Õ£¬Çë¼ì²é¾ßÌåÔ­Òò');
+      ShowMessageOnMultiDevice('Kubernetesç‰ˆæœ¬ä¿¡æ¯è¿”å›ä¸ºç©ºï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ');
   except
     on E: Exception do
-      ShowMessageOnMultiDevice('»ñÈ¡Kubernetes×é¼şĞÅÏ¢Ê§°Ü£¬Çë¼ì²é¾ßÌåÔ­Òò£º' + E.Message);
+      ShowMessageOnMultiDevice('è·å–Kubernetesç»„ä»¶ä¿¡æ¯å¤±è´¥ï¼Œè¯·æ£€æŸ¥å…·ä½“åŸå› ï¼š' + E.Message);
   end;
   ComboBoxKubernetesVersion.Enabled := True;
 end;
