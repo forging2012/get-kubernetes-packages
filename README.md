@@ -1,5 +1,5 @@
 # get-kubernetes-packages
-Get Kubernetes Packages without VPN
+Get Kubernetes Packages without VPN (Gitlab已经停止了对API v3的支持，新版本已经更新至v4)
 
 欢迎使用睿云智合提供的Kubernetes部署资源获取工具！
 
